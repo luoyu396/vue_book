@@ -1,0 +1,65 @@
+@charset "utf-8";
+//-----------------------------------------------------  
+// mixin scss
+// 包括常用的mixin，%
+// mixin，通过@include调用，样式通过拷贝的方式使用，尤其适用于传递参数
+// %，通过@extend调用，样式通过组合申明的方式使用，适用于不传参数的代码片段  
+//-----------------------------------------------------
+// float left & right
+@mixin float($float:left) {
+  float: $float;
+  display: inline;
+}
+
+// clear
+@mixin clear {
+  *zoom: 1;
+  &:before,
+  &:after {
+    content: "";
+    display: table;
+    height: 0;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+%clear {
+  @include clear;
+}
+
+// Opacity
+@mixin opacity($opacity:50) {
+  opacity: $opacity / 100;
+  filter: alpha(opacity=$opacity);
+}
+
+// @include radius;
+@mixin radius($radius:2px) {
+  border-radius: $radius;
+}
+
+// @extend %text-overflow;
+%text-overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin ellipsis($width:100%) {
+  @extend %text-overflow;
+  width: $width;
+}
+
+//@include transition;
+@mixin transition($transition...) {
+  transition-property: $transition;
+  transition-duration: 0.3s;
+}
+
+// float left & right
+@mixin float($float:left) {
+  float: $float;
+  display: inline;
+}

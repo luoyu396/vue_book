@@ -1,0 +1,214 @@
+@charset "utf-8";
+// 登录
+
+@media screen and (min-width: 1441px) and (max-width: 1920px) {
+  html {
+    font-size: 20px;
+
+  }
+}
+
+@media screen and (max-width: 1440px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.login {
+
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  top: 0;
+
+  .login-body {
+    @include clear;
+    height: 100%;
+    width: 100%;
+    background: transparent url(../img/bg.png) 0 0 no-repeat;
+    background-size: 100% 100%;
+    display: table;
+
+    .wrap {
+      @include clear;
+      height: 26rem;
+      width: 47.5rem;
+      margin: 0 auto;
+      box-sizing: border-box;
+      display: table-cell;
+      vertical-align: middle;
+
+      .logo,
+      .login-form {
+        float: left;
+      }
+
+      .logo {
+        width: 20rem;
+        height: 26rem;
+        border-radius: 2px 0px 0px 2px;
+        background: transparent url(../img/bg_form.png) 0 0 no-repeat;
+        background-size: 100% 100%;
+        padding-top: 75px;
+        text-align: center;
+        box-sizing: border-box;
+
+        .title {
+          height: 2.5rem;
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: rgba(255, 255, 255, 1);
+          line-height: 2.5rem;
+          letter-spacing: 0.55rem;
+        }
+
+        .desc {
+          width: 15.3rem;
+          height: 2.7rem;
+          margin: 0 auto;
+          background: rgba(255, 255, 255, 0.3);
+          font-size: 1.0rem;
+          font-weight: 600;
+          color: rgba(255, 255, 255, 1);
+          line-height: 0.8rem;
+          letter-spacing: 2px;
+          margin-top: 1rem;
+          background: transparent url(../img/bg_logo.png) 0 0 no-repeat;
+          background-size: 100% 100%;
+          line-height: 2.7rem;
+        }
+      }
+
+      .login-form {
+        width: 27.5rem;
+        height: 26rem;
+        padding: 2.5rem;
+        box-sizing: border-box;
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0px 5px 11px 0px rgba(7, 61, 123, 0.2);
+        border-radius: 0px 2px 2px 0px;
+
+        .login-title {
+          height: 2.75rem;
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: #438aff;
+          line-height: 2.75rem;
+          border-bottom: 1px solid #438AFF;
+          text-align: center;
+          margin-bottom: 1.5rem;
+        }
+
+        .login-name {
+          .userStyle {
+            width: 100%;
+            height: 2.5rem;
+            line-height: 2.5rem;
+            font-size: 0.8rem;
+            border-width: 0px 0px 1px 0px;
+            /*很关键：将默认的select选择框样式清除*/
+            appearance: none;
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            background: url("../img/bg_selected.png") no-repeat scroll right center transparent;
+            /*为下拉小箭头留出一点位置，避免被文字覆盖*/
+            padding-right: 14px;
+
+            /*清除ie的默认选择框样式清除，隐藏下拉箭头*/
+            &::-ms-expand {
+              display: none;
+            }
+          }
+        }
+
+        .login-submit {
+          button {
+            width: 22.5rem;
+            height: 3rem;
+            background: linear-gradient(90deg, rgba(59, 136, 255, 1) 0%, rgba(130, 139, 252, 1) 100%);
+            box-shadow: 0px 4px 8px 0px rgba(43, 142, 244, 0.4);
+            border-radius: 1px;
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 1);
+            line-height: 1.2rem;
+            letter-spacing: 1px;
+          }
+        }
+
+        ul.explain {
+          margin: 1.25rem 0px 0px 1rem;
+
+          li {
+            height: 1.05rem;
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: rgba(153, 153, 153, 1);
+            line-height: 1.05rem;
+            position: relative;
+
+            &::before {
+              content: '';
+              height: 4px;
+              width: 4px;
+              display: inline-block;
+              border-radius: 4px;
+              background: #6F9BFD;
+              top: 0.4rem;
+              position: absolute;
+            }
+
+            span {
+              margin-left: 0.5rem;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .login-name,
+  .login-password {
+    position: relative;
+    margin-bottom: 1.5rem;
+
+    label {
+      position: absolute;
+      display: block;
+      width: 1.5rem;
+      height: 1.3rem;
+      line-height: 1.3rem;
+      top: 0.6rem;
+      left: 5px;
+      color: $icon;
+      text-align: center;
+      font-size: 0.8rem;
+    }
+
+    input {
+      @include transition;
+      box-sizing: border-box;
+      display: block;
+      width: 100%;
+      height: 2.5rem;
+      line-height: 2.5rem;
+      font-size: 0.8rem;
+      color: $gray;
+      padding: 0 3px;
+      padding-left: 2rem;
+      border: none;
+      border-bottom: 1px solid $line;
+
+      &:hover,
+      &:focus {
+        border-color: $primary;
+      }
+
+      &:hover+label,
+      &:focus+label {
+        color: $primary;
+        border-color: $primary;
+      }
+    }
+  }
+}

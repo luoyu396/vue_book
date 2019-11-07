@@ -1,0 +1,93 @@
+@charset "utf-8";
+// 基本颜色(可以使用lighten，darken)
+$primary: #4865D2 !default;
+$red: #F32727 !default;
+$orange: #e7a939 !default;
+$yellow: #ffc400 !default;
+$green: #80b14d !default;
+$light-blue: #418ee7 !default;
+$gray: #555 !default;
+$light-gray: #666666 !default;
+// 常用颜色
+$line: #E5E5E5 !default;
+$icon: #888888 !default;
+$disable: #999999 !default;
+// 用于表格，下拉，树，日期
+$hover: #f5f7fa!default;
+
+$radius: 2px!default;
+// 字体颜色
+@each $colorlist,
+$color in (red, $red),
+(orange, $orange),
+(yellow, $yellow),
+(green, $green),
+(blue, $primary),
+(primary, $primary) {
+  .font-#{$colorlist} {
+    color: $color+!important;
+  }
+}
+
+// 字体大小
+@for $i from 6 through 20 {
+  .font#{$i*2} {
+    font-size: $i*2+px+!important;
+  }
+}
+
+// 字体位置
+@each $align in left,
+center,
+right {
+  .font-#{$align} {
+    text-align: $align+!important;
+  }
+}
+
+// 常用宽度
+@for $i from 4 through 220 {
+  .ui-w#{$i*5} {
+    width: $i*5+px+!important;
+  }
+}
+
+.ui-w {
+  width: 100%!important;
+}
+
+// 常用margin
+.ui-m0{
+  margin: 0!important;
+}
+// 常用margin
+@for $i from 0 through 6 {
+  .ui-mt#{$i*5} {
+    margin-top: $i*5+px+!important;
+  }
+  .ui-mb#{$i*5} {
+    margin-bottom: $i*5+px+!important;
+  }
+  .ui-mr#{$i*5} {
+    margin-right: $i*5+px+!important;
+  }
+  .ui-ml#{$i*5} {
+    margin-left: $i*5+px+!important;
+  }
+}
+
+// 常用padding
+@for $i from 1 through 6 {
+  .ui-pt#{$i*5} {
+    padding-top: $i*5+px+!important;
+  }
+  .ui-pb#{$i*5} {
+    padding-bottom: $i*5+px+!important;
+  }
+  .ui-pr#{$i*5} {
+    padding-right: $i*5+px+!important;
+  }
+  .ui-pl#{$i*5} {
+    padding-left: $i*5+px+!important;
+  }
+}
