@@ -21,9 +21,9 @@ export default {
   data() {
     return {
       //退出
-      logoutUrl: this.$url + 'adminLogin/logout',
+      logoutUrl: this.$url + "adminLogin/logout",
       //当前用户
-      currentUserUrl: this.$url + 'user/currentUser',
+      currentUserUrl: this.$url + "user/currentUser",
       //是否超级管理员
       isSuper: false,
       //用户信息
@@ -38,14 +38,15 @@ export default {
   },
   methods: {
     //获取用户信息
-    getUser(){
+    getUser() {
       let _this = this;
       _this.$ajax.get(_this.currentUserUrl).then(res => {
-        if(res.data.code == 200) {
+        if (res.data.code == 200) {
           _this.isSuper = res.data.isSuper;
           _this.userInfo = res.data.data;
-        }
-        else {
+          //初始化菜单
+          _this.initMenu();
+        } else {
           _this.$message.error(res.data.msg);
           //跳转到登录
           _this.$router.push({
@@ -59,9 +60,12 @@ export default {
       //退出
       if (command == "logout") {
         _this.$ajax.get(_this.logoutUrl).then(res => {
-          if(res.data.code == 200) {
+          if (res.data.code == 200) {
             _this.$message({
-              message: '退出成功', type: 'success', duration: 1000, onClose: function () {
+              message: "退出成功",
+              type: "success",
+              duration: 1000,
+              onClose: function() {
                 //跳转到登录
                 _this.$router.push({
                   name: "login"
@@ -74,22 +78,24 @@ export default {
       //基本信息
 
       //修改密码
-
     },
     //初始化菜单
     initMenu() {
-       this.menuList.push({
-         menuId: "user_list",
-         menuName: "用户管理"
-       }); 
+      if (this.isSuper) {
+        this.menuList.push({
+          menuId: "user_list",
+          menuName: "用户管理"
+        });
+      }
+      this.menuList.push({
+        menuId: "type_list",
+        menuName: "图书分类管理"
+      });
     }
-
   },
   mounted: function() {
     //获取用户信息
     this.getUser();
-    //初始化菜单
-    this.initMenu();
   },
   provide() {
     return {

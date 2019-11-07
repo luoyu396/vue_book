@@ -40,7 +40,7 @@ export default {
     menus: function (val){
       this.activeIndex = this.menus[0].menuId;
       this.$router.push({
-        name: item.menuId
+        name: this.activeIndex
       });
     }
   }
