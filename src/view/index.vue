@@ -89,7 +89,16 @@ export default {
       }
       this.menuList.push({
         menuId: "type_list",
-        menuName: "图书分类管理"
+        menuName: "分类管理"
+      },{
+        menuId: "book_list",
+        menuName: "图书管理"
+      },{
+        menuId: "order_info_list",
+        menuName: "订单管理"
+      },{
+        menuId: "statistics_list",
+        menuName: "统计管理"
       });
     }
   },

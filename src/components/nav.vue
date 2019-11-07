@@ -30,7 +30,7 @@ export default {
   },
   components: {},
   methods: {
-    clickMenu(item){alert(item.menuId);
+    clickMenu(item){
       this.$router.push({
         name: item.menuId
       });
