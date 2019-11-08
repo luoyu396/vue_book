@@ -10,17 +10,17 @@
             type="primary"
             @click="addUser"
             icon="el-icon-plus"
-          >新增</el-button>
+          >新增用户</el-button>
         </div>
       </div>
       <div class="option-right">
         <div class="option-item">
           <el-form :inline="true">
             <el-form-item label="登录名">
-              <el-input size="small" v-model="searchParams.loginName" placeholder="登录名"></el-input>
+              <el-input size="small" v-model="searchParams.loginName" placeholder="登录名" clearable></el-input>
             </el-form-item>
             <el-form-item label="用户名">
-              <el-input size="small" v-model="searchParams.userName" placeholder="用户名"></el-input>
+              <el-input size="small" v-model="searchParams.userName" placeholder="用户名" clearable></el-input>
             </el-form-item>
             <el-form-item label="用户类型">
               <el-select
@@ -35,10 +35,10 @@
               </el-select>
             </el-form-item>
             <el-form-item label="移动电话">
-              <el-input size="small" v-model="searchParams.telphone" placeholder="移动电话"></el-input>
+              <el-input size="small" v-model="searchParams.telphone" placeholder="移动电话" clearable></el-input>
             </el-form-item>
             <el-form-item label="邮箱">
-              <el-input size="small" v-model="searchParams.email" placeholder="邮箱"></el-input>
+              <el-input size="small" v-model="searchParams.email" placeholder="邮箱" clearable></el-input>
             </el-form-item>
             <el-form-item>
               <el-button class="search-btn" size="small" type="primary" @click="onSearch">检索</el-button>
