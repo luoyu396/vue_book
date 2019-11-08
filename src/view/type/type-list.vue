@@ -382,7 +382,31 @@ export default {
     },
     //删除类型
     toDelete(row){
-
+      var _this = this;
+      _this
+        .$confirm("确认删除记录吗？", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+        .then(() => {
+          //执行删除操作
+          _this.$ajax.delete(_this.deleteUrl + "/" + row.typeId).then(res => {
+            res = res.data;
+            if (res.code == 200) {
+              _this.$message({
+                message: "删除成功",
+                type: "success"
+              });
+              _this.initList();
+            } else {
+              _this.$message({
+                message: res.msg,
+                type: "error"
+              });
+            }
+          });
+        });
     },
     handleSizeChange(val) {
       this.pageSize = val;
