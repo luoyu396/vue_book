@@ -281,10 +281,26 @@ export default {
         }
       });
     },
+    //创建实例
+    getInstance() {
+        return {
+          userId: "",
+          loginName: "",
+          userName: "",
+          userType: "1",
+          password: "",
+          telphone: "",
+          email: "",
+          address: "",
+          createTime: new Date(),
+          remark: ""
+        }
+    },
     //添加用户
     addUser() {
       this.userTitle = "添加用户";
       this.loading = false;
+      this.userFormData = this.getInstance();
       this.userDialogVisible = true;
     },
     //编辑用户
@@ -390,7 +406,7 @@ export default {
     //设置密码
     toSetPassword(row) {
       this.loading = false;
-      this.userFormData = Object.assign({}, row);
+      this.userFormData.userId = row.userId;
       this.userFormData.password = "";
       this.userPassDialogVisible = true;
     },
