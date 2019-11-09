@@ -1,4 +1,4 @@
-<!-- 用户管理 -->
+<!-- 图书管理 -->
 <template>
   <div>
     <div class="ui-option">
@@ -8,7 +8,7 @@
             size="small"
             class="operation"
             type="primary"
-            @click="addUser"
+            @click="addBook"
             icon="el-icon-plus"
           >新增</el-button>
         </div>
@@ -16,29 +16,27 @@
       <div class="option-right">
         <div class="option-item">
           <el-form :inline="true">
-            <el-form-item label="登录名">
-              <el-input size="small" v-model="searchParams.loginName" placeholder="登录名"></el-input>
+            <el-form-item label="分类">
+              <select-tree ref="selectTree"
+                class="stree"
+                :props="props"
+                :options="treeNodeList"
+                :clearable="isClearable"
+                :accordion="isAccordion"
+                @getvalue="getvalue($event)"
+              ></select-tree>
             </el-form-item>
-            <el-form-item label="用户名">
-              <el-input size="small" v-model="searchParams.userName" placeholder="用户名"></el-input>
+            <el-form-item label="图书名称">
+              <el-input size="small" v-model="searchParams.bookName" placeholder="图书名称"></el-input>
             </el-form-item>
-            <el-form-item label="用户类型">
-              <el-select
-                placeholder="请选择用户类型"
-                size="small"
-                class="el-mini"
-                v-model="searchParams.userType"
-                clearable
-              >
-                <el-option label="普通用户" value="1"></el-option>
-                <el-option label="管理员" value="2"></el-option>
-              </el-select>
+            <el-form-item label="ISBN">
+              <el-input size="small" v-model="searchParams.isbn" placeholder="ISBN"></el-input>
             </el-form-item>
-            <el-form-item label="移动电话">
-              <el-input size="small" v-model="searchParams.telphone" placeholder="移动电话"></el-input>
+            <el-form-item label="出版社">
+              <el-input size="small" v-model="searchParams.publisher" placeholder="出版社"></el-input>
             </el-form-item>
-            <el-form-item label="邮箱">
-              <el-input size="small" v-model="searchParams.email" placeholder="邮箱"></el-input>
+            <el-form-item label="作者">
+              <el-input size="small" v-model="searchParams.author" placeholder="作者"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button class="search-btn" size="small" type="primary" @click="onSearch">检索</el-button>
@@ -48,15 +46,13 @@
       </div>
     </div>
 
-    <el-table :data="userList" stripe border style="width: 100%;">
+    <el-table :data="bookList" stripe border style="width: 100%;">
       <el-table-column label="序号" align="center" type="index" width="50"></el-table-column>
-      <el-table-column prop="loginName" label="登录名" align="center" min-width="200"></el-table-column>
-      <el-table-column prop="userName" label="用户名" align="center" min-width="200"></el-table-column>
-      <el-table-column prop="userType" label="用户类型" align="center" min-width="200">
-        <template slot-scope="scope">{{scope.row.userType == '1'? '普通用户' : '管理员'}}</template>
-      </el-table-column>
-      <el-table-column prop="telphone" label="移动电话" align="center" min-width="200"></el-table-column>
-      <el-table-column prop="email" label="邮箱" align="center" min-width="200"></el-table-column>
+      <el-table-column prop="bookName" label="图书名称" align="center" min-width="200"></el-table-column>
+      <el-table-column prop="isbn" label="ISBN" align="center" min-width="200"></el-table-column>
+      <el-table-column prop="publisher" label="出版社" align="center" min-width="200"></el-table-column>
+      <el-table-column prop="author" label="作者" align="center" min-width="200"></el-table-column>
+      <el-table-column prop="typeName" label="分类" align="center" min-width="200"></el-table-column>
       <el-table-column label="操作" width="150" align="center">
         <template slot-scope="scope">
           <el-button
@@ -72,13 +68,6 @@
             type="text"
             title="删除"
             @click="toDelete(scope.row)"
-          ></el-button>
-          <el-button
-            icon="el-icon-setting"
-            class="icon_size"
-            type="text"
-            title="设置密码"
-            @click="toSetPassword(scope.row)"
           ></el-button>
         </template>
       </el-table-column>
@@ -97,157 +86,209 @@
     </div>
 
     <el-dialog
-      :title="userTitle"
-      :visible.sync="userDialogVisible"
-      width="550px"
-      @close="handleClose('userFormData')"
+      :title="bookTitle"
+      :visible.sync="bookDialogVisible"
+      width="850px"
+      @close="handleClose('bookFormData')"
     >
-      <el-form :model="userFormData" ref="userFormData" :rules="rules">
-        <el-form-item label="登录名:" :label-width="formLabelWidth" prop="loginName">
-          <el-input v-model="userFormData.loginName" autocomplete="off" style="width: 300px;"></el-input>
+      <el-form :model="bookFormData" ref="bookFormData" :inline="true" :rules="rules" class="book_info_form">
+        <el-form-item label="分类:" :label-width="formLabelWidth" prop="typeId">
+          <select-tree ref="typeIdTree"
+                class="input_item"
+                :props="props"
+                :options="treeNodeList"
+                :value="bookFormData.typeId"
+                :clearable="isClearable"
+                :accordion="isAccordion"
+                @getvalue="getFormvalue($event)"
+              ></select-tree>
         </el-form-item>
-        <el-form-item label="用户名:" :label-width="formLabelWidth" prop="userName">
-          <el-input v-model="userFormData.userName" autocomplete="off" style="width: 300px;"></el-input>
+        <el-form-item label="图书名称:" :label-width="formLabelWidth" prop="bookName">
+          <el-input v-model="bookFormData.bookName" class="input_item" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="用户类型:" :label-width="formLabelWidth" prop="userType">
-          <el-select
-            placeholder="请选择用户类型"
-            size="small"
-            class="el-mini"
-            v-model="userFormData.userType"
-            style="width: 300px;"
-            :disabled="userFormData.userId != ''"
-          >
-            <el-option label="普通用户" value="1"></el-option>
-            <el-option label="管理员" value="2"></el-option>
-          </el-select>
+        <el-form-item label="ISBN:" :label-width="formLabelWidth" prop="isbn">
+          <el-input v-model="bookFormData.isbn" class="input_item" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item
-          v-if="userFormData.userId == ''"
-          label="密码:"
-          :label-width="formLabelWidth"
-          prop="password"
-        >
-          <el-input
-            v-model="userFormData.password"
-            autocomplete="off"
-            show-password
-            style="width: 300px;"
-          ></el-input>
+        <el-form-item label="出版社:" :label-width="formLabelWidth" prop="publisher">
+          <el-input v-model="bookFormData.publisher" class="input_item" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="移动电话:" :label-width="formLabelWidth" prop="telphone">
-          <el-input v-model="userFormData.telphone" autocomplete="off" style="width: 300px;"></el-input>
+        <el-form-item label="作者:" :label-width="formLabelWidth" prop="author">
+          <el-input v-model="bookFormData.author" class="input_item" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="邮箱:" :label-width="formLabelWidth" prop="email">
-          <el-input v-model="userFormData.email" autocomplete="off" style="width: 300px;"></el-input>
+        <el-form-item label="页数:" :label-width="formLabelWidth" prop="pageNum">
+          <el-input v-model="bookFormData.pageNum" class="input_item" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="地址:" :label-width="formLabelWidth" prop="address">
-          <el-input v-model="userFormData.address" autocomplete="off" style="width: 300px;"></el-input>
+        <el-form-item label="出版时间:" :label-width="formLabelWidth" prop="publishDate">
+          <el-date-picker
+            class="input_item"
+            v-model="bookFormData.publishDate"
+            type="date"
+            value-format="yyyy-MM-dd"
+          ></el-date-picker>
         </el-form-item>
-        <el-form-item label="备注:" :label-width="formLabelWidth" prop="remark">
-          <el-input
-            type="textarea"
-            v-model="userFormData.remark"
-            autocomplete="off"
-            style="width: 300px;"
-          ></el-input>
+        <el-form-item label="销售价格:" :label-width="formLabelWidth" prop="salePrice">
+          <el-input v-model="bookFormData.salePrice" class="input_item" autocomplete="off"></el-input>
         </el-form-item>
+        <el-form-item label="折扣率:" :label-width="formLabelWidth" prop="discount">
+          <el-input v-model="bookFormData.discount" class="input_item" autocomplete="off"></el-input>
+        </el-form-item>
+        <div>
+          <el-form-item label="图书简介:" :label-width="formLabelWidth" prop="introduction">
+              <el-input type="textarea" v-model="bookFormData.introduction" class="input_area_item" rows="6"></el-input>
+          </el-form-item>
+        </div>
+        <div>
+          <el-form-item label="图片:" :label-width="formLabelWidth" prop="imgId" class="form_item_img">
+              <img-attach :attach="imgAttach" :on-uploaded="onUploaded" :view="isView"/>
+          </el-form-item>
+        </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="saveOrUser('userFormData')" :loading="loading">保存</el-button>
-        <el-button @click="userDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveOrbook('bookFormData')" :loading="loading">保存</el-button>
+        <el-button @click="bookDialogVisible = false">取 消</el-button>
       </div>
     </el-dialog>
 
-    <el-dialog
-      title="修改密码"
-      :visible.sync="userPassDialogVisible"
-      width="550px"
-      @close="handleClose('userFormData')"
-    >
-      <el-form :model="userFormData" ref="userFormData" :rules="rules">
-        <el-form-item label="密码:" :label-width="formLabelWidth" prop="password">
-          <el-input
-            v-model="userFormData.password"
-            autocomplete="off"
-            show-password
-            style="width: 300px;"
-          ></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="updatePassword('userFormData')" :loading="loading">保存</el-button>
-        <el-button @click="userPassDialogVisible = false">取 消</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
+import treeSelect from "@/components/tree-select.vue";
+import imgAttach from "@/components/imgAttach.vue"; 
+
 export default {
+  components: {
+    "select-tree": treeSelect,
+    "img-attach": imgAttach
+  },
   data: function() {
     return {
       //查询列表URL
-      initListUrl: this.$url + "user/queryListPage2",
+      initListUrl: this.$url + "book/queryListPage2",
+      //树形节点URL
+      treeNodeUrl: this.$url + "type/treeNodes",
       //保存URL
-      saveUrl: this.$url + "user/save",
+      saveUrl: this.$url + "book/save",
       //更新URL
-      updateUrl: this.$url + "user/update",
+      updateUrl: this.$url + "book/update",
       //删除URL
-      deleteUrl: this.$url + "user/delete",
-      //更新密码
-      updatePasswordUrl: this.$url + "user/updatePassword",
+      deleteUrl: this.$url + "book/delete",
+      //获取图片附件
+      imageUrl: this.$url + "image/selectOne",
       loading: false,
       currentPage: 1,
       pageSize: 10,
       total: 1,
       //宽度
       formLabelWidth: "150px",
+      //树形节点集合
+      treeNodeList: [],
+      // 可清空（可选）
+      isClearable: true,
+      // 可收起（可选）
+      isAccordion: true,
+      // 配置项（必选）
+      props: {
+        value: "id",
+        label: "label",
+        children: "children"
+      },
       //查询参数
       searchParams: {
-        loginName: "",
-        userName: "",
-        userType: "",
-        telphone: "",
-        email: ""
+        typeId: "",
+        bookName: "",
+        isbn: "",
+        publisher: "",
+        author: ""
       },
       //列表数据
-      userList: [],
+      bookList: [],
       //表单
-      userFormData: {
-        userId: "",
-        loginName: "",
-        userName: "",
-        userType: "1",
-        password: "",
-        telphone: "",
-        email: "",
-        address: "",
-        createTime: new Date(),
-        remark: ""
+      bookFormData: {
+        bookId: "",
+        typeId: "",
+        bookName: "",
+        isbn: "",
+        publisher: "",
+        author: "",
+        pageNum: "",
+        publishDate: "",
+        salePrice: "",
+        introduction: "",
+        discount: "",
+        buyCount: 0,
+        imgId: "",
+        createTime: new Date()
       },
       //规则
       rules: {
-        loginName: [
-          { required: true, message: "请输入登录名", trigger: "blur" }
+        typeId: [
+          { required: true, message: "请选择分类", trigger: "change" }
         ],
-        userName: [
-          { required: true, message: "请输入用户名", trigger: "blur" }
+        bookName: [
+          { required: true, message: "请输入图书名称", trigger: "blur" }
         ],
-        userType: [
-          { required: true, message: "请选择用户类型", trigger: "change" }
+        isbn: [
+          { required: true, message: "请输入ISBN", trigger: "blur" }
         ],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
+        publisher: [
+          { required: true, message: "请输入出版社", trigger: "blur" }
+        ],
+        author: [
+          { required: true, message: "请输入作者", trigger: "blur" }
+        ],
+        pageNum: [
+          { required: true, message: "请输入页数", trigger: "blur" }
+        ],
+        publishDate: [
+          { required: true, message: "请输入出版时间", trigger: "blur" }
+        ],
+        salePrice: [
+          { required: true, message: "请输入销售价格", trigger: "blur" }
+        ],
+        introduction: [
+          { required: true, message: "请输入图书简介", trigger: "blur" }
+        ],
+        discount: [
+          { required: true, message: "请输入折扣率", trigger: "blur" }
+        ],
       },
       //弹框
-      userDialogVisible: false,
+      bookDialogVisible: false,
       //表单名
-      userTitle: "",
-      //修改密码
-      userPassDialogVisible: false
+      bookTitle: "",
+      //只读
+      isView: false,
+      //图片
+      imgAttach: {
+        url: ''
+      }
     };
   },
   methods: {
+    //获取分类树形节点集合
+    getTreeNodeList() {
+      let _this = this;
+      _this.$ajax.get(_this.treeNodeUrl).then(res => {
+        res = res.data;
+        if (res.code == 200) {
+          _this.treeNodeList = res.data;
+        }else {
+          _this.treeNodeList = [];
+          _this.$message({
+            message: "列表初始化失败",
+            type: "error"
+          });
+        }
+      });
+    },
+    // 下拉切换 取值
+    getvalue(value){
+      this.searchParams.typeId = value;
+    },
+    getFormvalue(value){
+      this.bookFormData.typeId = value;
+    },
     //查询
     onSearch() {
       this.currentPage = 1;
@@ -259,21 +300,21 @@ export default {
       let params = new URLSearchParams();
       params.append("page", _this.currentPage);
       params.append("rows", _this.pageSize);
-      params.append("loginName", _this.searchParams.loginName);
-      params.append("userName", _this.searchParams.userName);
-      params.append("userType", _this.searchParams.userType);
-      params.append("telphone", _this.searchParams.telphone);
-      params.append("email", _this.searchParams.email);
+      params.append("typeId", _this.searchParams.typeId);
+      params.append("bookName", _this.searchParams.bookName);
+      params.append("isbn", _this.searchParams.isbn);
+      params.append("publisher", _this.searchParams.publisher);
+      params.append("author", _this.searchParams.author);
       params.append("contentType", 1);
       _this.$ajax.post(_this.initListUrl, params).then(res => {
         res = res.data;
         if (res.code == 200) {
-          _this.userList = res.data.list;
+          _this.bookList = res.data.list;
           _this.total = res.data.total;
           _this.currentPage = res.data.pageNum;
           _this.pageSize = res.data.pageSize;
         } else {
-          _this.userList = [];
+          _this.bookList = [];
           _this.$message({
             message: "列表初始化失败",
             type: "error"
@@ -281,20 +322,68 @@ export default {
         }
       });
     },
-    //添加用户
-    addUser() {
-      this.userTitle = "添加用户";
-      this.loading = false;
-      this.userDialogVisible = true;
+    //创建实例
+    getInstance() {
+      return {
+        bookId: "",
+        typeId: "",
+        bookName: "",
+        isbn: "",
+        publisher: "",
+        author: "",
+        pageNum: "",
+        publishDate: "",
+        salePrice: "",
+        introduction: "",
+        discount: "",
+        buyCount: 0,
+        imgId: "",
+        createTime: new Date()
+      }
     },
-    //编辑用户
+    //添加图书
+    addBook() {
+      this.bookTitle = "添加图书";
+      this.loading = false;
+      this.imgAttach.url = "";
+      this.bookFormData = this.getInstance();
+      this.bookDialogVisible = true;
+    },
+    //编辑图书
     toEdit(row) {
-      this.userTitle = "修改用户";
+      this.bookTitle = "修改图书";
       this.loading = false;
-      this.userFormData = Object.assign({}, row);
-      this.userDialogVisible = true;
+      this.bookFormData = Object.assign({}, row);
+      if(row.imgId != null && row.imgId != "") {
+        //获取图片
+        this.getImage(row.imgId);
+      }
+      else {
+        this.imgAttach.url = "";
+        this.bookDialogVisible = true;
+      }
     },
-    //删除用户
+    //获取图片
+    getImage(imgId){
+      let _this = this;
+      _this.$ajax.get(_this.imageUrl+"/"+imgId).then(res => {
+        res = res.data;
+        if (res.code == 200) {
+          _this.imgAttach.url = this.$imgUrl+res.data.downloadUrl;
+        }else {
+          _this.$message({
+            message: "获取图片失败",
+            type: "error"
+          });
+        }
+        _this.bookDialogVisible = true;
+      });
+    },
+    //上传完回调
+    onUploaded(attach){
+      this.bookFormData.imgId = attach.imgId;
+    },
+    //删除图书
     toDelete(row) {
       var _this = this;
       _this
@@ -305,7 +394,7 @@ export default {
         })
         .then(() => {
           //执行删除操作
-          _this.$ajax.delete(_this.deleteUrl + "/" + row.userId).then(res => {
+          _this.$ajax.delete(_this.deleteUrl + "/" + row.bookId).then(res => {
             res = res.data;
             if (res.code == 200) {
               _this.$message({
@@ -337,17 +426,14 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-    //保存或更新用户
-    saveOrUser(formName) {
+    //保存或更新图书
+    saveOrbook(formName) {
       var _this = this;
       _this.$refs[formName].validate(valid => {
         if (valid) {
           _this.loading = true;
-          if (_this.userFormData.userId == "") {
-            _this.userFormData.password = _this.$md5(
-              _this.userFormData.password
-            );
-            _this.$ajax.post(_this.saveUrl, _this.userFormData).then(res => {
+          if (_this.bookFormData.bookId == "") {
+            _this.$ajax.post(_this.saveUrl, _this.bookFormData).then(res => {
               res = res.data;
               _this.loading = false;
               if (res.code == 200) {
@@ -355,10 +441,9 @@ export default {
                   message: "保存成功",
                   type: "success"
                 });
-                _this.userDialogVisible = false;
+                _this.bookDialogVisible = false;
                 _this.initList();
               } else {
-                _this.userFormData.password = "";
                 _this.$message({
                   message: res.msg,
                   type: "error"
@@ -366,7 +451,7 @@ export default {
               }
             });
           } else {
-            _this.$ajax.put(_this.updateUrl, _this.userFormData).then(res => {
+            _this.$ajax.put(_this.updateUrl, _this.bookFormData).then(res => {
               res = res.data;
               _this.loading = false;
               if (res.code == 200) {
@@ -374,7 +459,7 @@ export default {
                   message: "更新成功",
                   type: "success"
                 });
-                _this.userDialogVisible = false;
+                _this.bookDialogVisible = false;
                 _this.initList();
               } else {
                 _this.$message({
@@ -386,52 +471,50 @@ export default {
           }
         }
       });
-    },
-    //设置密码
-    toSetPassword(row) {
-      this.loading = false;
-      this.userFormData = Object.assign({}, row);
-      this.userFormData.password = "";
-      this.userPassDialogVisible = true;
-    },
-    //更新密码
-    updatePassword(formName) {
-      var _this = this;
-      _this.$refs[formName].validate(valid => {
-        if (valid) {
-          _this.loading = true;
-          let params = new URLSearchParams();
-          params.append("userId", _this.userFormData.userId);
-          params.append("password", _this.$md5(_this.userFormData.password));
-          params.append("contentType", 1);
-          _this.$ajax.put(_this.updatePasswordUrl, params).then(res => {
-            res = res.data;
-            _this.loading = false;
-            if (res.code == 200) {
-              _this.$message({
-                message: "更新成功",
-                type: "success"
-              });
-              _this.userPassDialogVisible = false;
-              _this.initList();
-            } else {
-              _this.$message({
-                message: res.msg,
-                type: "error"
-              });
-            }
-          });
-        }
-      });
     }
   },
   computed: {
     showPageFlag: function() {
-      return this.userList.length > 0;
+      return this.bookList.length > 0;
     }
   },
   mounted() {
+    //获取分类树形节点集合
+    this.getTreeNodeList();
     this.initList();
   }
 };
 </script>
+<style lang="scss">
+    .book_info_form {
+        .el-form-item__content {
+          width: 200px !important;
+        }
+        .el-form-item__label{
+            line-height: 20px;
+            padding-top:10px;
+        }
+        .form_item_custom{
+            .el-form-item__label{
+                padding-top: 0px;
+            }
+        }
+        .form_item_img{
+            .el-form-item__label::before{
+                content: '*';
+                color:#f56c6c;
+                margin-right:4px;
+            }
+        }
+        .input_area_item{
+            width:555px;
+        }
+    }
+    .stree .el-input__inner {
+      height: 28px !important;
+      line-height: 28px !important;
+    }
+    .el-date-editor.el-input, .el-date-editor.el-input__inner {
+      width: 200px;
+    }
+</style>

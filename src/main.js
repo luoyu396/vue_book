@@ -14,6 +14,7 @@ import VueAMap from 'vue-amap';
 
 Vue.prototype.$ajax = axios
 Vue.prototype.$url = process.env.API_HOST
+Vue.prototype.$imgUrl = process.env.IMG_PATH
 import './assets/css/common.scss'
 Vue.use(ElementUI);
 // 引入富文本框的组件开始

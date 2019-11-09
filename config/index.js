@@ -11,7 +11,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/bookmanage': {
-        target: 'http://127.0.0.1:5555',//后端接口地址
+        target: 'http://127.0.0.1',//后端接口地址
         secure: true,//如果是https接口，需要配置这个参数
         changeOrigin: true,//是否允许跨越
         pathRewrite: {

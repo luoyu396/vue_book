@@ -26,7 +26,6 @@
               <el-select
                 placeholder="请选择用户类型"
                 size="small"
-                class="el-mini"
                 v-model="searchParams.userType"
                 clearable
               >
@@ -112,8 +111,7 @@
         <el-form-item label="用户类型:" :label-width="formLabelWidth" prop="userType">
           <el-select
             placeholder="请选择用户类型"
-            size="small"
-            class="el-mini"
+            size="medium"
             v-model="userFormData.userType"
             style="width: 300px;"
             :disabled="userFormData.userId != ''"
