@@ -16,10 +16,10 @@
             </span>
           <el-dropdown-menu slot="dropdown">
               <template v-if="!isSuper">
-                <el-dropdown-item >修改密码</el-dropdown-item>
-                <el-dropdown-item >基本信息</el-dropdown-item>
+                <el-dropdown-item command="updatePwd">修改密码</el-dropdown-item>
+                <el-dropdown-item command="updateUserInfo">基本信息</el-dropdown-item>
               </template>
-              <el-dropdown-item  command="logout">退出系统</el-dropdown-item>
+              <el-dropdown-item command="logout">退出系统</el-dropdown-item>
           </el-dropdown-menu>
       </el-dropdown>
     </div>

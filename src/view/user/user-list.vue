@@ -152,7 +152,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="saveOrUser('userFormData')" :loading="loading">保存</el-button>
+        <el-button type="primary" @click="saveOrUpdateUser('userFormData')" :loading="loading">保存</el-button>
         <el-button @click="userDialogVisible = false">取 消</el-button>
       </div>
     </el-dialog>
@@ -352,7 +352,7 @@ export default {
       this.$refs[formName].resetFields();
     },
     //保存或更新用户
-    saveOrUser(formName) {
+    saveOrUpdateUser(formName) {
       var _this = this;
       _this.$refs[formName].validate(valid => {
         if (valid) {
