@@ -284,7 +284,7 @@ export default {
     },
     // 下拉切换 取值
     getvalue(value){
-      this.searchParams.typeId = value;
+      this.searchParams.typeId = value == null ? "" : value;
     },
     getFormvalue(value){
       this.bookFormData.typeId = value;
@@ -343,11 +343,22 @@ export default {
     },
     //添加图书
     addBook() {
-      this.bookTitle = "添加图书";
-      this.loading = false;
-      this.imgAttach.url = "";
-      this.bookFormData = this.getInstance();
-      this.bookDialogVisible = true;
+      let _this = this;
+      _this.bookTitle = "添加图书";
+      _this.loading = false;
+      _this.imgAttach.url = "";
+      _this.bookFormData = _this.getInstance();
+      //下拉树
+      var trees = _this.$refs['typeIdTree'];
+      for(var x in trees){
+        try{
+          trees[x].clearHandle(); 
+        }catch(e){}
+      }
+      setTimeout(function(){
+        _this.$refs["bookFormData"].clearValidate();
+      },100);
+      _this.bookDialogVisible = true;
     },
     //编辑图书
     toEdit(row) {

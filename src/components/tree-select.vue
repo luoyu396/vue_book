@@ -80,8 +80,8 @@ export default {
             this.valueTitle = node[this.props.label]
             this.valueId = node[this.props.value]
             this.$emit('getvalue',this.valueId)
-            this.defaultExpandedKey = []
-            if(node.children.length == 0){
+            this.defaultExpandedKey = [];
+            if(node.children == null || node.children.length == 0){
                 this.$refs.els.blur();
             }
         },
