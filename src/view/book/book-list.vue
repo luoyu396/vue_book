@@ -216,7 +216,6 @@ export default {
         salePrice: "",
         introduction: "",
         discount: "",
-        buyCount: 0,
         imgId: "",
         createTime: new Date()
       },
@@ -336,7 +335,6 @@ export default {
         salePrice: "",
         introduction: "",
         discount: "",
-        buyCount: 0,
         imgId: "",
         createTime: new Date()
       }
