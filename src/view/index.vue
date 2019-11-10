@@ -1,7 +1,6 @@
 <template>
   <div>
     <v-header
-      v-if="($route.name!='login' && $route.name!='register' && $route.name!='registerSuccess')"
       :user="userInfo"
       :isSuper="isSuper"
     />

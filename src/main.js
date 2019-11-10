@@ -10,21 +10,11 @@ import axios from './axios/ajax.js'
 import 'babel-polyfill'
 import 'url-search-params-polyfill'
 
-import VueAMap from 'vue-amap';
-
 Vue.prototype.$ajax = axios
 Vue.prototype.$url = process.env.API_HOST
 Vue.prototype.$imgUrl = process.env.IMG_PATH
 import './assets/css/common.scss'
 Vue.use(ElementUI);
-// 引入富文本框的组件开始
-import  VueQuillEditor from 'vue-quill-editor'
-// require styles 引入样式
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
-Vue.use(VueQuillEditor)
-// 引入富文本框操作结束
 
 import md5 from 'js-md5';
 Vue.prototype.$md5 = md5;
