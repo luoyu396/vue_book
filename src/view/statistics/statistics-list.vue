@@ -2,6 +2,12 @@
 <template>
   <div>
     <div class="ui-option">
+      <div class="option-left">
+        <div class="option-item">
+          <span style="color:red;">*</span>
+          <span>选择开始与结束时间进行统计</span>
+        </div>
+      </div>
       <div class="option-right">
         <div class="option-item">
           <el-form :inline="true">
@@ -62,7 +68,7 @@
         <el-table-column prop="totalSalePrice" label="销售额" align="center"></el-table-column>
       </template>
     </el-table>
-    <div class="table_page" v-show="showPageFlag">
+    <div class="table_page" v-show="showPageFlag" style="position: relative;">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -73,7 +79,7 @@
         layout="prev, jumper, pager, next, sizes, total"
         :total="total"
       ></el-pagination>
-      <span>{{totalValue}}</span>
+      <span style="position: absolute;top: 0px;right: 10px;">{{totalValue}}</span>
     </div>
   </div>
 </template>
