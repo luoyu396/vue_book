@@ -70,9 +70,11 @@ export default {
         // 初始化值
         initHandle(){
             if(this.valueId){
-                this.valueTitle = this.$refs.selectTree.getNode(this.valueId).data.label     // 初始化显示
-                this.$refs.selectTree.setCurrentKey(this.valueId)       // 设置默认选中
-                this.defaultExpandedKey = [this.valueId]      // 设置默认展开
+                if(this.$refs.selectTree.getNode(this.valueId) != null) {
+                    this.valueTitle = this.$refs.selectTree.getNode(this.valueId).data.label     // 初始化显示
+                    this.$refs.selectTree.setCurrentKey(this.valueId)       // 设置默认选中
+                    this.defaultExpandedKey = [this.valueId]      // 设置默认展开
+                }
             }
         },
         // 切换选项
