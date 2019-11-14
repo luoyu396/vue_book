@@ -42,6 +42,8 @@
     data: function () {
       return {
         loginUrl: this.$url + 'adminLogin/login',
+        //当前用户
+        currentUserUrl: this.$url + "user/currentUser",
         loginModel: {
           username: "",
           password: ""
@@ -77,15 +79,33 @@
           if (response.data.code === 200) {
             _this.$message({
               message: '登录成功', type: 'success', duration: 1000, onClose: function () {
-                //跳转到主页
-                _this.$router.push({
-                  name: "index"
-                });
+                //获取用户信息
+                _this.getUser();
               }
             });
           }else {
             let errorMsg = response.data.msg ? ('登录失败,' + response.data.msg) : "登录失败";
             _this.$message({message: errorMsg, type: 'error'});
+          }
+        });
+      },
+      //获取用户信息
+      getUser() {
+        let _this = this;
+        _this.$ajax.get(_this.currentUserUrl).then(res => {
+          if (res.data.code == 200) {
+            let isSuper = res.data.isSuper;
+            let userInfo = res.data.data;
+            _this.$store.commit("setIsSuper",isSuper);
+            if(!isSuper) {
+              _this.$store.commit("setSysData",userInfo);
+            }
+            //跳转到主页
+            _this.$router.push({
+              name: "index"
+            });
+          } else {
+            _this.$message.error(res.data.msg);
           }
         });
       },

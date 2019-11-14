@@ -91,6 +91,7 @@
 <script>
 import Header from "../components/header";
 import Nav from "../components/nav.vue";
+import { mapState } from "vuex";
 
 export default {
   data() {
@@ -131,8 +132,6 @@ export default {
     return {
       //退出
       logoutUrl: this.$url + "adminLogin/logout",
-      //当前用户
-      currentUserUrl: this.$url + "user/currentUser",
       //更新URL
       updateUrl: this.$url + "user/update",
       //更新密码
@@ -140,8 +139,6 @@ export default {
       //更新当前会话用户信息
       updateSessionUserUrl: this.$url + "user/updateSessionUser",
       loading: false,
-      //是否超级管理员
-      isSuper: false,
       //用户信息
       userInfo: {},
       //菜单集合
@@ -179,24 +176,29 @@ export default {
     "v-header": Header,
     "v-nav": Nav
   },
+  computed: {
+    ...mapState({
+      sysData(state) {
+        return state;
+      }
+    }),
+    ...mapState(["isSuper"])
+  },
   methods: {
     //获取用户信息
     getUser() {
       let _this = this;
-      _this.$ajax.get(_this.currentUserUrl).then(res => {
-        if (res.data.code == 200) {
-          _this.isSuper = res.data.isSuper;
-          _this.userInfo = res.data.data;
+      if(_this.sysData){
+          _this.userInfo = _this.sysData;
           //初始化菜单
           _this.initMenu();
-        } else {
-          _this.$message.error(res.data.msg);
-          //跳转到登录
-          _this.$router.push({
-            name: "login"
-          });
-        }
-      });
+      } else {
+        _this.$message.error("登录会话过期");
+        //跳转到登录
+        _this.$router.push({
+          name: "login"
+        });
+      }
     },
     handleCommand(command) {
       var _this = this;
