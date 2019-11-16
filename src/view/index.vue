@@ -159,6 +159,9 @@ export default {
         confirmPassword: [
           { required: true, message: "请输入确认密码", trigger: "blur" },
           { validator: confirmValid, trigger:'blur'}
+        ],
+        userName: [
+          { required: true, message: "请输入用户名", trigger: "blur" }
         ]
       },
       //修改密码表单
@@ -189,7 +192,7 @@ export default {
     getUser() {
       let _this = this;
       if(_this.sysData){
-          _this.userInfo = _this.sysData;
+          _this.userInfo = Object.assign({}, _this.sysData);
           //初始化菜单
           _this.initMenu();
       } else {
@@ -323,6 +326,7 @@ export default {
       _this.$ajax.get(_this.updateSessionUserUrl+"/"+userId).then(res => {
         if (res.data.code == 200) {
           _this.userInfo = res.data.data;
+          _this.$store.commit("setSysData",_this.userInfo);
         }
       });
     }
