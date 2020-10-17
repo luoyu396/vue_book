@@ -1,3 +1,3 @@
 # vue-init
 
-> book manage project
+> book manage project server
